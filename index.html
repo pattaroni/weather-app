@@ -7,7 +7,65 @@
     <title>Weather App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <header class="header">
+      <div class="container">
+        <form class="header-form" name="form" autocomplete="off">
+          <input
+            type="text"
+            name="searchInput"
+            class="header-input"
+            placeholder="Enter the city"
+          />
+          <svg class="location-icon" width="22" height="22">
+            <use href="./src/img/sprite.svg#icon-location"></use>
+          </svg>
+          <button type="button" class="star-icon-btn">
+            <svg class="star-icon" width="22" height="22">
+              <use href="./src/img/sprite.svg#icon-star"></use>
+            </svg>
+          </button>
+        </form>
+        <div class="searched-places">
+          <ul class="searched-places-list">
+            <li class="places-item">
+              <p class="place">Kyiv</p>
+              <svg class="icon-del-place" width="10" height="10">
+                <use href="./src/img/sprite.svg#icon-close"></use>
+              </svg>
+            </li>
+            <li class="places-item">
+              <p class="place">Paris</p>
+              <svg class="icon-del-place" width="10" height="10">
+                <use href="./src/img/sprite.svg#icon-close"></use>
+              </svg>
+            </li>
+          </ul>
+          <button type="button" class="next-place-btn">
+            <svg class="next-icon" width="4" height="8">
+              <use href="./public/sprite.svg#icon-next"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="section-weather">
+        <div class="container">
+          <div class="days-btn-box">
+            <button type="button">TODAY</button>
+            <button type="button">5 DAYS</button>
+          </div>
+          <div class="weather-container">
+            <h1>Kyiv, UA</h1>
+            <div class="swiper mySwiperr">
+              <div class="swiper-wrapper"></div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
