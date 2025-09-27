@@ -1,47 +1,58 @@
-// import Swiper from "swiper";
-// import { Navigation } from "swiper/modules";
-// import "swiper/css";
-// import "swiper/css/navigation";
+import Swiper from "swiper";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "../css/swiper-overrides.css";
+import spriteUrl from "../img/sprite.svg";
 import type { DayWeather } from "../types/types";
 import { refs } from "./refs";
 
 export function renderWeatherSlider(data: DayWeather[]) {
-  const markup = data
-    .map(
-      (item) =>
-        `<div class="swiper-slide">
-      <p class="day-of-week">${item.dayName}</p>
-      <p class="day-of-month">${item.formattedDate}</p>
-      <svg class="weather-icon" width="35" height="35">
-        <use href=""></use>
-      </svg>
-      <ul class="min-max-temp-list">
-        <li class="min-max-temp-list-item">
-            <p class="text-temp">min</p>
-            <p class="value-temp">${item.min}</p>
-        </li>
-        <li class="min-max-temp-list-item">
-            <p class="text-temp">max</p>
-            <p class="value-temp">${item.max}</p>
-        </li>
-      </ul>
-      <button type="button" class="more-info-btn">more info</button>
-    </div>`
-    )
-    .join("");
+  const markup = `
+    <div class="swiper-wrapper">
+    ${data
+      .map(
+        (item) =>
+          `<div class="swiper-slide">
+            <p class="day-of-week">${item.dayName}</p>
+            <p class="day-of-month">${item.formattedDate}</p>
+            <svg class="weather-icon" width="35" height="35">
+              <use href=""></use>
+            </svg>
+            <ul class="min-max-temp-list">
+              <li class="min-max-temp-list-item">
+                <p class="text-temp">min</p>
+                <p class="value-temp">${item.min}</p>
+              </li>
+              <li class="min-max-temp-list-item">
+                <p class="text-temp">max</p>
+                <p class="value-temp">${item.max}</p>
+              </li>
+            </ul>
+            <button type="button" class="more-info-btn">more info</button>
+          </div>`
+      )
+      .join("")}
+          </div>
+          <div class="swiper-button-next">
+            <svg class="icon">
+              <use href="${spriteUrl}#icon-next"></use>
+            </svg>
+          </div>
+          <div class="swiper-button-prev"></div>`;
 
-  refs.swiperWrapperEl?.insertAdjacentHTML("beforeend", markup);
+  refs.swiperEl?.insertAdjacentHTML("beforeend", markup);
 
-  // const swiper = new Swiper(".mySwiper", {
-  //   modules: [Navigation],
-  //   slidesPerView: 3,
-  //   spaceBetween: 30,
-  //   cssMode: true,
-  //   navigation: {
-  //     nextEl: ".swiper-button-next",
-  //     prevEl: ".swiper-button-prev",
-  //   },
-  //   mousewheel: true,
-  //   keyboard: true,
-  // });
+  const swiper = new Swiper(".mySwiper", {
+    modules: [Navigation],
+    slidesPerView: 3,
+    spaceBetween: 17,
+    cssMode: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    mousewheel: true,
+    keyboard: true,
+  });
 }

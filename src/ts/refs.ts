@@ -1,3 +1,3 @@
 export const refs = {
-  swiperWrapperEl: document.querySelector(".swiper-wrapper"),
+  swiperEl: document.querySelector(".mySwiper"),
 };
