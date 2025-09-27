@@ -43,7 +43,7 @@ export function renderWeatherSlider(data: DayWeather[]) {
 
   refs.swiperEl?.insertAdjacentHTML("beforeend", markup);
 
-  const swiper = new Swiper(".mySwiper", {
+  new Swiper(".mySwiper", {
     modules: [Navigation],
     slidesPerView: 3,
     spaceBetween: 17,
