@@ -1,6 +1,28 @@
+.mySwiper {
+  height: 194px;
+  padding: 0 30px;
+}
 .swiper-button-next {
-  top: 0;
+  top: 187px !important;
+  right: 107px !important;
+  width: 7px;
+  height: 10px;
   color: transparent;
-  width: 30px;
-  height: 30px;
+}
+.swiper-button-prev {
+  top: 187px !important;
+  left: 103px !important;
+  width: 7px;
+  height: 10px;
+  color: transparent;
+}
+
+.icon {
+  stroke-width: 1.5px;
+  stroke: #fff;
+  fill: none;
+}
+
+.swiper-slide {
+  height: 146px;
 }

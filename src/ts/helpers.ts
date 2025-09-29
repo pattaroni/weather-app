@@ -15,7 +15,7 @@ export function groupByDay(list: WeatherType[]): DayWeather[] {
   map.forEach((items, date) => {
     const min = Math.min(...items.map((i) => i.main.temp_min));
     const max = Math.max(...items.map((i) => i.main.temp_max));
-    const { description, id, main } = items[0].weather[0];
+    const { description, id, main, icon } = items[0].weather[0];
 
     const dayName = [
       "Sunday",
@@ -48,6 +48,7 @@ export function groupByDay(list: WeatherType[]): DayWeather[] {
       description,
       id,
       main,
+      icon,
       dayName,
       formattedDate: `${new Date(date).getDate()} ${
         months[new Date(date).getMonth()]

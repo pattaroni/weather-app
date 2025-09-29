@@ -121,7 +121,7 @@
 .weather-container {
   border-radius: 34px;
   width: 280px;
-  height: 541px;
+  height: 272px;
   box-shadow: 0 5px 33px 0 rgba(16, 33, 54, 0.6);
   background: rgba(16, 33, 54, 0.8);
   border: none;
@@ -135,4 +135,70 @@
   text-align: center;
   color: #fff;
   margin-bottom: 20px;
+}
+
+.day-of-week {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: #fff;
+  opacity: 0.55;
+  margin-bottom: 8px;
+}
+
+.day-of-month {
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.weather-icon {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 4px;
+}
+
+.min-max-temp-list {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 4px;
+}
+
+.min-max-temp-list-item {
+  height: 38px;
+  position: relative;
+}
+
+.line-icon {
+  stroke-width: 1px;
+  stroke: #27384a;
+}
+
+.text-temp {
+  font-size: 12px;
+  text-align: center;
+  color: #767d85;
+  height: 18px;
+}
+
+.value-temp {
+  text-align: center;
+  color: #ff6b09;
+  height: 18px;
+}
+
+.more-info-btn {
+  font-weight: 700;
+  font-size: 12px;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  text-align: center;
+  color: #fff;
+  opacity: 0.3;
+  background-color: transparent;
+  border: none;
+  width: 57px;
+  height: 20px;
+  cursor: pointer;
 }

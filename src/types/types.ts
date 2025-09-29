@@ -11,6 +11,7 @@ export interface WeatherType {
     id: number;
     main: string;
     description: string;
+    icon: string;
   }[];
   wind: {
     speed: number;
@@ -25,6 +26,7 @@ export interface DayWeather {
   id: number;
   description: string;
   main: string;
+  icon: string;
   dayName: string;
   formattedDate: string;
 }
