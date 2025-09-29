@@ -72,7 +72,7 @@ export function renderWeatherSlider(data: DayWeather[]) {
               <use href="${spriteUrl}#icon-left-arrow"></use>
             </svg>
           </div>`;
-
+  if (refs.swiperEl) refs.swiperEl.innerHTML = "";
   refs.swiperEl?.insertAdjacentHTML("beforeend", markup);
 
   new Swiper(".mySwiper", {

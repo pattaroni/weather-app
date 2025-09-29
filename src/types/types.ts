@@ -30,3 +30,11 @@ export interface DayWeather {
   dayName: string;
   formattedDate: string;
 }
+
+export interface WeatherApiResponse {
+  list: WeatherType[];
+  city: {
+    name: string;
+    country: string;
+  };
+}
