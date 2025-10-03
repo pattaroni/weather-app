@@ -4,7 +4,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "../css/swiper-overrides.css";
 import spriteUrl from "../img/sprite.svg";
-import type { DayWeather } from "../types/types";
+import type { DayWeather, WeatherTodayApiResponse } from "../types/types";
 import { refs } from "./refs";
 
 type WeatherIcon =
@@ -87,4 +87,50 @@ export function renderWeatherSlider(data: DayWeather[]) {
     mousewheel: true,
     keyboard: true,
   });
+}
+
+export function renderTodayWeather(data: WeatherTodayApiResponse): void {
+  let iconHref: WeatherIcon = "icon-sun";
+  switch (data.weather[0].main) {
+    case "Clouds":
+      iconHref = "icon-cloud";
+      break;
+    case "Rain":
+      iconHref = "icon-rain";
+      break;
+    case "Clear":
+      iconHref = "icon-sun";
+      break;
+    case "Snow":
+      iconHref = "icon-snow";
+      break;
+  }
+  const markup = `
+    <div class='today-weather-icon-box'>
+      <svg class="weather-icon-today" width="35" height="35">
+        <use href="${spriteUrl}#${iconHref}"></use>
+      </svg>
+      <p class="today-location">${data.name}, ${data.sys.country}</p>
+    </div>
+    <div class="temp-today">
+      <p class="avg-temp-today">${Math.round(data.main.temp)}°</p>
+      <ul class="min-max-temp-today">
+        <li class="min-max-temp-today-item">
+          <p class="min-max-text-today">min</p>
+          <p class="min-max-value-today">${Math.round(data.main.temp_min)}°</p>
+        </li>
+        <li class="min-max-temp-today-item">
+          <svg class="line-icon" width="2" height="38">
+            <use href="${spriteUrl}#icon-line"></use>
+          </svg>
+        </li>
+        <li class="min-max-temp-today-item">
+          <p class="min-max-text-today">max</p>
+          <p class="min-max-value-today">${Math.round(data.main.temp_max)}°</p>
+        </li>
+      </ul>
+    </div>
+  `;
+  refs.todayWeatherBoxEl.innerHTML = "";
+  refs.todayWeatherBoxEl.insertAdjacentHTML("beforeend", markup);
 }

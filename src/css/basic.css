@@ -4,7 +4,6 @@ body {
   background-position: center;
   background-size: cover;
   color: #fff;
-  width: 100wh;
   height: 100vh;
 }
 @media screen and (min-resolution: 192dpi) {
@@ -33,4 +32,8 @@ body {
   body {
     background-image: url(../img/background/desktop/desk-background@2x.webp);
   }
+}
+
+.hidden {
+  display: none;
 }

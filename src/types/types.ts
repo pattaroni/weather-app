@@ -38,3 +38,25 @@ export interface WeatherApiResponse {
     country: string;
   };
 }
+
+interface todayWeatherIcon {
+  description: string;
+  icon: string;
+  main: string;
+}
+
+export interface WeatherTodayApiResponse {
+  main: {
+    temp: number;
+    temp_max: number;
+    temp_min: number;
+  };
+  name: string;
+  sys: {
+    country: string;
+    sunrise: number;
+    sunset: number;
+  };
+  timezone: number;
+  weather: todayWeatherIcon[];
+}

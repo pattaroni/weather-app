@@ -1,53 +1,21 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-import type { DayWeather, WeatherApiResponse } from "../types/types";
-import { fetchWeather } from "./api";
+import type { DayWeather, WeatherTodayApiResponse } from "../types/types";
+import { fetchTodayWeather, fetchWeather } from "./api";
 import { groupByDay } from "./helpers";
 import { refs } from "./refs";
-import { renderWeatherSlider } from "./render-functions";
+import { renderTodayWeather, renderWeatherSlider } from "./render-functions";
 
 const DEFAULT_CITY: string = "Kyiv";
+let QUERY: string = "";
 
-export async function handleSearch(): Promise<void> {
+let todayCache: WeatherTodayApiResponse | null = null;
+let fiveDaysCache: DayWeather[] | null = null;
+
+export async function weatherHandleSearch(): Promise<void> {
   const form = refs.formEl as HTMLFormElement;
   const input = form?.elements.namedItem("searchInput") as HTMLInputElement;
   if (!form) return;
-  try {
-    const defaultList: WeatherApiResponse = await fetchWeather(DEFAULT_CITY);
-    const defaultGroupList: DayWeather[] = groupByDay(defaultList.list);
-    renderWeatherSlider(defaultGroupList);
-    input.value = "";
-  } catch (error) {
-    input.value = "";
-    iziToast.error({
-      message: "Error loading default weather data",
-      position: "bottomCenter",
-    });
-  }
-
-  refs.locationIconEl?.addEventListener("click", async () => {
-    if (input.value.trim() !== "") {
-      try {
-        const list: WeatherApiResponse = await fetchWeather(input.value.trim());
-        const groupList: DayWeather[] = groupByDay(list.list);
-        if (refs.weatherTitleEl)
-          refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
-        renderWeatherSlider(groupList);
-        input.value = "";
-      } catch (error) {
-        input.value = "";
-        iziToast.error({
-          message: "Error loading default weather data",
-          position: "bottomCenter",
-        });
-      }
-    } else {
-      iziToast.info({
-        message: "Please enter a city name.",
-      });
-      return;
-    }
-  });
 
   refs.formEl?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -58,12 +26,26 @@ export async function handleSearch(): Promise<void> {
       });
       return;
     }
+    todayCache = null;
+    fiveDaysCache = null;
     try {
-      const list: WeatherApiResponse = await fetchWeather(input.value.trim());
-      const groupList: DayWeather[] = groupByDay(list.list);
-      if (refs.weatherTitleEl)
-        refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
-      renderWeatherSlider(groupList);
+      const city = input.value.trim();
+      if (refs.todayBtnEl.classList.contains("active")) {
+        refs.swiperEl.innerHTML = "";
+        const list = await fetchTodayWeather(city);
+        renderTodayWeather(list);
+        QUERY = city;
+        todayCache = list;
+      } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
+        refs.todayWeatherBoxEl.innerHTML = "";
+        const list = await fetchWeather(city);
+        const groupList: DayWeather[] = groupByDay(list.list);
+        if (refs.weatherTitleEl)
+          refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
+        renderWeatherSlider(groupList);
+        QUERY = city;
+        fiveDaysCache = groupList;
+      }
       input.value = "";
     } catch (error) {
       input.value = "";
@@ -71,6 +53,117 @@ export async function handleSearch(): Promise<void> {
         message: "City not found. Please try again.",
         position: "bottomCenter",
       });
+    }
+  });
+
+  refs.locationIconEl?.addEventListener("click", async () => {
+    if (input.value.trim() === "") {
+      iziToast.info({ message: "Please enter a city name." });
+      return;
+    }
+    todayCache = null;
+    fiveDaysCache = null;
+    try {
+      const city = input.value.trim();
+      if (refs.todayBtnEl.classList.contains("active")) {
+        refs.swiperEl.innerHTML = "";
+        const list = await fetchTodayWeather(city);
+        renderTodayWeather(list);
+        QUERY = city;
+        todayCache = list;
+      } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
+        refs.todayWeatherBoxEl.innerHTML = "";
+        const list = await fetchWeather(city);
+        const groupList: DayWeather[] = groupByDay(list.list);
+        if (refs.weatherTitleEl)
+          refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
+        renderWeatherSlider(groupList);
+        QUERY = city;
+        fiveDaysCache = groupList;
+      }
+      input.value = "";
+    } catch (error) {
+      input.value = "";
+      iziToast.error({
+        message: "City not found. Please try again.",
+        position: "bottomCenter",
+      });
+    }
+  });
+
+  try {
+    const defaultList = await fetchTodayWeather(DEFAULT_CITY);
+    renderTodayWeather(defaultList);
+    QUERY = DEFAULT_CITY;
+    todayCache = defaultList;
+  } catch (error) {
+    iziToast.error({
+      message: "Error loading default weather data",
+      position: "bottomCenter",
+    });
+  }
+
+  refs.daysBtnBoxEl?.addEventListener("click", async (e) => {
+    const target = e.target as HTMLElement;
+    if (target === e.currentTarget) return;
+
+    if (target.nodeName === "BUTTON" && target.id === "today-btn") {
+      refs.todayBtnEl.classList.add("active");
+      refs.fiveDaysBtnEl.classList.remove("active");
+
+      refs.todayWeatherBoxEl.style.display = "block";
+      refs.fiveDaysWeatherBoxEl.style.display = "none";
+      refs.weatherContainerEl.style.height = "190px";
+      refs.weatherContainerEl.style.background = "#102136";
+      refs.weatherTitleEl?.classList.add("hidden");
+      refs.swiperEl?.classList.add("hidden");
+
+      if (todayCache) {
+        renderTodayWeather(todayCache);
+      } else {
+        try {
+          const city = QUERY || DEFAULT_CITY;
+          const list = await fetchTodayWeather(city);
+          renderTodayWeather(list);
+          todayCache = list;
+        } catch (error) {
+          iziToast.error({
+            message: "Error loading weather data",
+            position: "bottomCenter",
+          });
+        }
+      }
+    }
+
+    if (target.nodeName === "BUTTON" && target.id === "five-days-btn") {
+      refs.todayBtnEl.classList.remove("active");
+      refs.fiveDaysBtnEl.classList.add("active");
+
+      refs.fiveDaysWeatherBoxEl.style.display = "block";
+      refs.todayWeatherBoxEl.style.display = "none";
+      refs.weatherContainerEl.style.height = "272px";
+      refs.weatherContainerEl.style.background = "rgba(16, 33, 54, 0.8)";
+      refs.weatherTitleEl?.classList.remove("hidden");
+      refs.swiperEl?.classList.remove("hidden");
+
+      if (fiveDaysCache) {
+        renderWeatherSlider(fiveDaysCache);
+      } else {
+        try {
+          const city = QUERY || DEFAULT_CITY;
+          const list = await fetchWeather(city);
+          const groupList: DayWeather[] = groupByDay(list.list);
+          if (refs.weatherTitleEl)
+            refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
+          renderWeatherSlider(groupList);
+          fiveDaysCache = groupList;
+        } catch (error) {
+          iziToast.error({
+            message: "Error loading weather data",
+            position: "bottomCenter",
+          });
+        }
+      }
     }
   });
 }

@@ -3,6 +3,7 @@ interface apiTypes {
   BASE_URL: string;
   ENDPOINTS: {
     fiveDays: (city: string, key: string) => string;
+    today: (city: string, key: string) => string;
   };
 }
 export const api: apiTypes = {
@@ -11,5 +12,6 @@ export const api: apiTypes = {
   ENDPOINTS: {
     fiveDays: (city, key) =>
       `forecast?q=${city}&appid=${key}&units=metric&lang=ua`,
+    today: (city, key) => `weather?q=${city}&appid=${key}&units=metric&lang=ua`,
   },
 };

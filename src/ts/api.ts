@@ -1,6 +1,9 @@
 import axios from "axios";
 import { api } from "./constants";
-import type { WeatherApiResponse } from "../types/types";
+import type {
+  WeatherApiResponse,
+  WeatherTodayApiResponse,
+} from "../types/types";
 const { BASE_URL, API_KEY, ENDPOINTS } = api;
 
 axios.defaults.baseURL = BASE_URL;
@@ -11,4 +14,11 @@ export async function fetchWeather(city: string): Promise<WeatherApiResponse> {
     city: data.city,
   };
   return importantData;
+}
+
+export async function fetchTodayWeather(
+  city: string
+): Promise<WeatherTodayApiResponse> {
+  const { data } = await axios.get(ENDPOINTS.today(city, API_KEY));
+  return data;
 }
