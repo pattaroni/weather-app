@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/modern-normalize@1.1.0/modern-normalize.min.css"
+    />
+    <link rel="stylesheet" href="./src/css/style.css" />
     <title>Weather App</title>
   </head>
   <body>
@@ -51,6 +56,13 @@
     <main>
       <section class="section-weather">
         <div class="container">
+          <div class="weather-container">
+            <div class="today-weather-container"></div>
+            <div class="five-days-weather-container">
+              <h1 class="weather-title hidden">Kyiv, UA</h1>
+              <div class="swiper mySwiper hidden"></div>
+            </div>
+          </div>
           <div class="days-btn-box">
             <button type="button" class="today-btn active" id="today-btn">
               TODAY
@@ -59,12 +71,8 @@
               5 DAYS
             </button>
           </div>
-          <div class="weather-container">
-            <div class="today-weather-container"></div>
-            <div class="five-days-weather-container">
-              <h1 class="weather-title hidden">Kyiv, UA</h1>
-              <div class="swiper mySwiper hidden"></div>
-            </div>
+          <div class="today-weather-more-container">
+            <div class="today-weather-more-content"></div>
           </div>
         </div>
       </section>

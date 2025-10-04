@@ -4,7 +4,11 @@ import type { DayWeather, WeatherTodayApiResponse } from "../types/types";
 import { fetchTodayWeather, fetchWeather } from "./api";
 import { groupByDay } from "./helpers";
 import { refs } from "./refs";
-import { renderTodayWeather, renderWeatherSlider } from "./render-functions";
+import {
+  renderTodayMoreWeather,
+  renderTodayWeather,
+  renderWeatherSlider,
+} from "./render-functions";
 
 const DEFAULT_CITY: string = "Kyiv";
 let QUERY: string = "";
@@ -34,6 +38,7 @@ export async function weatherHandleSearch(): Promise<void> {
         refs.swiperEl.innerHTML = "";
         const list = await fetchTodayWeather(city);
         renderTodayWeather(list);
+        renderTodayMoreWeather(list);
         QUERY = city;
         todayCache = list;
       } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
@@ -69,6 +74,7 @@ export async function weatherHandleSearch(): Promise<void> {
         refs.swiperEl.innerHTML = "";
         const list = await fetchTodayWeather(city);
         renderTodayWeather(list);
+        renderTodayMoreWeather(list);
         QUERY = city;
         todayCache = list;
       } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
@@ -94,6 +100,7 @@ export async function weatherHandleSearch(): Promise<void> {
   try {
     const defaultList = await fetchTodayWeather(DEFAULT_CITY);
     renderTodayWeather(defaultList);
+    renderTodayMoreWeather(defaultList);
     QUERY = DEFAULT_CITY;
     todayCache = defaultList;
   } catch (error) {
@@ -107,16 +114,20 @@ export async function weatherHandleSearch(): Promise<void> {
     const target = e.target as HTMLElement;
     if (target === e.currentTarget) return;
 
+    // TODAY BUTTON
     if (target.nodeName === "BUTTON" && target.id === "today-btn") {
       refs.todayBtnEl.classList.add("active");
       refs.fiveDaysBtnEl.classList.remove("active");
-
       refs.todayWeatherBoxEl.style.display = "block";
       refs.fiveDaysWeatherBoxEl.style.display = "none";
-      refs.weatherContainerEl.style.height = "190px";
+      refs.weatherContainerEl.style.height = "193px";
       refs.weatherContainerEl.style.background = "#102136";
       refs.weatherTitleEl?.classList.add("hidden");
       refs.swiperEl?.classList.add("hidden");
+      refs.todayWeatherMoreContent.style.display = "flex";
+      refs.todayWeatherMoreContainer.style.height = "184px";
+      refs.daysBtnBoxEl.classList.remove("top");
+      refs.weatherContainerEl.classList.remove("bottom");
 
       if (todayCache) {
         renderTodayWeather(todayCache);
@@ -135,16 +146,20 @@ export async function weatherHandleSearch(): Promise<void> {
       }
     }
 
+    // FIVE DAYS BUTTON
     if (target.nodeName === "BUTTON" && target.id === "five-days-btn") {
       refs.todayBtnEl.classList.remove("active");
       refs.fiveDaysBtnEl.classList.add("active");
-
       refs.fiveDaysWeatherBoxEl.style.display = "block";
       refs.todayWeatherBoxEl.style.display = "none";
       refs.weatherContainerEl.style.height = "272px";
       refs.weatherContainerEl.style.background = "rgba(16, 33, 54, 0.8)";
       refs.weatherTitleEl?.classList.remove("hidden");
       refs.swiperEl?.classList.remove("hidden");
+      refs.todayWeatherMoreContent.style.display = "none";
+      refs.todayWeatherMoreContainer.style.height = "0";
+      refs.daysBtnBoxEl.classList.add("top");
+      refs.weatherContainerEl.classList.add("bottom");
 
       if (fiveDaysCache) {
         renderWeatherSlider(fiveDaysCache);

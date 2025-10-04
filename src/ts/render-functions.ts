@@ -6,6 +6,13 @@ import "../css/swiper-overrides.css";
 import spriteUrl from "../img/sprite.svg";
 import type { DayWeather, WeatherTodayApiResponse } from "../types/types";
 import { refs } from "./refs";
+import {
+  clock,
+  getDayOfMonth,
+  getMonthName,
+  getShortWeekdayName,
+  getTimeString,
+} from "./helpers";
 
 type WeatherIcon =
   | "icon-cloud"
@@ -133,4 +140,70 @@ export function renderTodayWeather(data: WeatherTodayApiResponse): void {
   `;
   refs.todayWeatherBoxEl.innerHTML = "";
   refs.todayWeatherBoxEl.insertAdjacentHTML("beforeend", markup);
+}
+
+export function renderTodayMoreWeather(data: WeatherTodayApiResponse) {
+  const currentDay = getDayOfMonth(data.dt, data.timezone);
+  let endDayString: string = "";
+  switch (currentDay) {
+    case 1:
+      endDayString = "st";
+      break;
+    case 2:
+      endDayString = "nd";
+      break;
+    case 3:
+      endDayString = "rd";
+      break;
+    default:
+      endDayString = "th";
+  }
+  const markup = `
+    <div class='today-date-container'>
+      <p class='today-date-day-p'>
+        <span class='today-day'>${currentDay}</span>
+        <span class='today-day-th'>${endDayString}</span>
+      </p>
+      <p class='today-date-week-day-p'>${getShortWeekdayName(
+        data.dt,
+        data.timezone
+      )}</p>
+    </div>
+    <div class='today-month-time-container'>
+      <p class='today-month-time-month-p'>${getMonthName(
+        data.dt,
+        data.timezone
+      )}</p>
+      <p class='clock'></p>
+    </div>
+    <div class='today-sunset-container'>
+      <div class='today-sunrise'>
+         <svg class="sunrise-icon" width="20" height="20">
+            <use href="${spriteUrl}#icon-sunrise"></use>
+          </svg>
+          <p class='today-sunrise-time'>${getTimeString(
+            data.sys.sunrise,
+            data.timezone
+          )}</p>
+      </div>
+      <div class='today-sunset'>
+         <svg class="sunset-icon" width="20" height="20">
+            <use href="${spriteUrl}#icon-sunset"></use>
+          </svg>
+          <p class='today-sunset-time'>${getTimeString(
+            data.sys.sunset,
+            data.timezone
+          )}</p>
+      </div>
+    </div>
+  `;
+
+  refs.todayWeatherMoreContent.innerHTML = "";
+  refs.todayWeatherMoreContent.insertAdjacentHTML("beforeend", markup);
+
+  const clockEl = refs.todayWeatherMoreContent.querySelector(
+    ".clock"
+  ) as HTMLParagraphElement;
+
+  clock(clockEl, data.timezone);
 }

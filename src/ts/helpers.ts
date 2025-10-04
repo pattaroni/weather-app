@@ -57,3 +57,96 @@ export function groupByDay(list: WeatherType[]): DayWeather[] {
   });
   return result;
 }
+
+let clockIntervalId: ReturnType<typeof setInterval> | null = null;
+
+function pad(n: number): string {
+  return String(n).padStart(2, "0");
+}
+
+function updateClock(el: HTMLParagraphElement, offsetSeconds: number) {
+  const targetMs = Date.now() + offsetSeconds * 1000;
+  const d = new Date(targetMs);
+  const h = d.getUTCHours();
+  const m = d.getUTCMinutes();
+  const s = d.getUTCSeconds();
+
+  el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+export function clock(el: HTMLParagraphElement, timezone: number): void {
+  const offsetSeconds = timezone;
+
+  if (clockIntervalId !== null) {
+    clearInterval(clockIntervalId);
+  }
+
+  updateClock(el, offsetSeconds);
+
+  clockIntervalId = setInterval(() => {
+    updateClock(el, offsetSeconds);
+  }, 1000);
+}
+
+export function getDayOfMonth(
+  timestampMs: number,
+  timezoneOffsetSec: number
+): number {
+  const date = new Date(timestampMs);
+  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
+  const localDate = new Date(localTimeMs);
+  return localDate.getUTCDate();
+}
+
+export function getShortWeekdayName(
+  timestampMs: number,
+  timezoneOffsetSec: number
+): string {
+  const date = new Date(timestampMs);
+  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
+  const localDate = new Date(localTimeMs);
+
+  const weekdaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  return weekdaysShort[localDate.getUTCDay()];
+}
+
+export function getTimeString(
+  timestampMs: number,
+  timezoneOffsetSec: number
+): string {
+  const date = new Date(timestampMs);
+  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
+  const localDate = new Date(localTimeMs);
+
+  const hours = localDate.getUTCHours().toString().padStart(2, "0");
+  const minutes = localDate.getUTCMinutes().toString().padStart(2, "0");
+
+  return `${hours}:${minutes}`;
+}
+
+export function getMonthName(
+  timestampMs: number,
+  timezoneOffsetSec: number
+): string {
+  const date = new Date(timestampMs);
+  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
+  const localDate = new Date(localTimeMs);
+
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  return months[localDate.getUTCMonth()];
+}

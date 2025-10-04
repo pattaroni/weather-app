@@ -46,6 +46,7 @@ interface todayWeatherIcon {
 }
 
 export interface WeatherTodayApiResponse {
+  dt: number;
   main: {
     temp: number;
     temp_max: number;
