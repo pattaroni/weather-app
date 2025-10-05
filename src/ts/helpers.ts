@@ -89,10 +89,10 @@ export function clock(el: HTMLParagraphElement, timezone: number): void {
 }
 
 export function getDayOfMonth(
-  timestampMs: number,
+  timestampSec: number,
   timezoneOffsetSec: number
 ): number {
-  const date = new Date(timestampMs);
+  const date = new Date(timestampSec * 1000);
   const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
   const localDate = new Date(localTimeMs);
   return localDate.getUTCDate();

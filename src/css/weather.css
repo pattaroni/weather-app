@@ -280,6 +280,7 @@
   background: rgba(16, 33, 54, 0.8);
   transition: all 250ms ease-in-out;
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .today-weather-more-content {
@@ -365,6 +366,32 @@
   align-items: center;
   height: 20px;
   gap: 8px;
+  letter-spacing: 0.04em;
+}
+
+.today-citation {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  overflow: hidden;
+  height: 97px;
+  transition: all 250ms ease-in-out;
+}
+
+.citation-icon {
+  margin-bottom: 4px;
+}
+
+.citation-text {
+  font-style: italic;
+  letter-spacing: 0.04em;
+  text-align: right;
+  width: 251px;
+  margin-bottom: 8px;
+}
+
+.citation-author {
+  font-size: 18px;
   letter-spacing: 0.04em;
 }
 

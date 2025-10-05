@@ -24,4 +24,7 @@ export const refs = {
     ".today-weather-more-content"
   ) as HTMLDivElement,
   clockEl: document.querySelector(".clock") as HTMLParagraphElement,
+  todayCitationContainerEl: document.querySelector(
+    ".today-citation"
+  ) as HTMLDivElement,
 };
