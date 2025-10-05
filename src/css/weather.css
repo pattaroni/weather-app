@@ -124,6 +124,10 @@
   opacity: 1 !important;
 }
 
+.section-weather .container {
+  padding-bottom: 32px;
+}
+
 .weather-container {
   border-radius: 34px;
   width: 280px;
@@ -376,7 +380,6 @@
   overflow: hidden;
   height: 97px;
   transition: all 250ms ease-in-out;
-  margin-bottom: 32px;
 }
 
 .citation-icon {
