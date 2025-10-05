@@ -160,10 +160,7 @@ export function renderTodayMoreWeather(data: WeatherTodayApiResponse) {
   }
   const markup = `
     <div class='today-date-container'>
-      <p class='today-date-day-p'>
-        <span class='today-day'>${currentDay}</span>
-        <span class='today-day-th'>${endDayString}</span>
-      </p>
+      <p class='today-date-day-p'>${currentDay}<sup class='today-th-sup'>${endDayString}</sup></p>
       <p class='today-date-week-day-p'>${getShortWeekdayName(
         data.dt,
         data.timezone

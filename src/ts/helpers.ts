@@ -99,39 +99,33 @@ export function getDayOfMonth(
 }
 
 export function getShortWeekdayName(
-  timestampMs: number,
+  timestampSec: number,
   timezoneOffsetSec: number
 ): string {
-  const date = new Date(timestampMs);
-  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
-  const localDate = new Date(localTimeMs);
+  const date = new Date((timestampSec + timezoneOffsetSec) * 1000);
 
   const weekdaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  return weekdaysShort[localDate.getUTCDay()];
+  return weekdaysShort[date.getUTCDay()];
 }
 
 export function getTimeString(
-  timestampMs: number,
+  timestampSec: number,
   timezoneOffsetSec: number
 ): string {
-  const date = new Date(timestampMs);
-  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
+  const localTimeMs = (timestampSec + timezoneOffsetSec) * 1000;
   const localDate = new Date(localTimeMs);
 
-  const hours = localDate.getUTCHours().toString().padStart(2, "0");
-  const minutes = localDate.getUTCMinutes().toString().padStart(2, "0");
+  const hours = String(localDate.getUTCHours()).padStart(2, "0");
+  const minutes = String(localDate.getUTCMinutes()).padStart(2, "0");
 
   return `${hours}:${minutes}`;
 }
 
 export function getMonthName(
-  timestampMs: number,
+  timestampSec: number,
   timezoneOffsetSec: number
 ): string {
-  const date = new Date(timestampMs);
-  const localTimeMs = date.getTime() + timezoneOffsetSec * 1000;
-  const localDate = new Date(localTimeMs);
+  const date = new Date((timestampSec + timezoneOffsetSec) * 1000);
 
   const months = [
     "January",
@@ -148,5 +142,5 @@ export function getMonthName(
     "December",
   ];
 
-  return months[localDate.getUTCMonth()];
+  return months[date.getUTCMonth()];
 }

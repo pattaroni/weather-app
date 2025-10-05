@@ -136,6 +136,7 @@ export async function weatherHandleSearch(): Promise<void> {
           const city = QUERY || DEFAULT_CITY;
           const list = await fetchTodayWeather(city);
           renderTodayWeather(list);
+          renderTodayMoreWeather(list);
           todayCache = list;
         } catch (error) {
           iziToast.error({

@@ -279,6 +279,7 @@
   height: 184px;
   background: rgba(16, 33, 54, 0.8);
   transition: all 250ms ease-in-out;
+  overflow: hidden;
 }
 
 .today-weather-more-content {
@@ -295,18 +296,23 @@
 .today-date-container {
   display: flex;
   margin-bottom: 16px;
-  gap: 20px;
+  gap: 43.8px;
+  font-weight: 300;
+  font-size: 45px;
+  letter-spacing: 0.04em;
+  text-align: center;
 }
 
 .today-month-time-container {
   display: flex;
   margin-bottom: 16px;
-  gap: 20px;
+  gap: 10px;
 }
 
 .today-sunset-container {
   display: flex;
-  gap: 20px;
+  margin-right: 5px;
+  gap: 10px;
 }
 
 .today-sunset-container > div {
@@ -316,6 +322,50 @@
 .sunrise-icon,
 .sunset-icon {
   fill: #ff6b09;
+}
+
+.today-date-day-p {
+  height: 45px;
+  position: relative;
+}
+
+.today-th-sup {
+  font-size: 27px;
+  position: absolute;
+  top: -3px;
+}
+
+.today-month-time-month-p {
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  height: 22px;
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  height: 22px;
+}
+
+.today-sunrise {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 20px;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+  padding-right: 10px;
+  letter-spacing: 0.04em;
+}
+
+.today-sunset {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  gap: 8px;
+  letter-spacing: 0.04em;
 }
 
 /* animation */
