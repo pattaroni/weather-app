@@ -376,6 +376,7 @@
   overflow: hidden;
   height: 97px;
   transition: all 250ms ease-in-out;
+  padding-bottom: 32px;
 }
 
 .citation-icon {
