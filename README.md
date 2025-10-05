@@ -1,3 +1,1 @@
-# PET-PROJECT
-
 # WEATHER APP
