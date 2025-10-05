@@ -125,7 +125,9 @@ export async function weatherHandleSearch(): Promise<void> {
       refs.weatherTitleEl?.classList.add("hidden");
       refs.swiperEl?.classList.add("hidden");
       refs.todayWeatherMoreContainer.style.height = "184px";
+      refs.todayWeatherMoreContainer.style.marginBottom = "20px";
       refs.todayCitationContainerEl.style.height = "97px";
+      refs.todayCitationContainerEl.style.marginBottom = "32px";
       refs.daysBtnBoxEl.classList.remove("top");
       refs.weatherContainerEl.classList.remove("bottom");
 
@@ -158,7 +160,9 @@ export async function weatherHandleSearch(): Promise<void> {
       refs.weatherTitleEl?.classList.remove("hidden");
       refs.swiperEl?.classList.remove("hidden");
       refs.todayWeatherMoreContainer.style.height = "0";
+      refs.todayWeatherMoreContainer.style.marginBottom = "0";
       refs.todayCitationContainerEl.style.height = "0";
+      refs.todayCitationContainerEl.style.marginBottom = "0";
       refs.daysBtnBoxEl.classList.add("top");
       refs.weatherContainerEl.classList.add("bottom");
 
