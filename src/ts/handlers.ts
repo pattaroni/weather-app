@@ -138,6 +138,7 @@ export async function weatherHandleSearch(): Promise<void> {
       refs.fiveDaysWeatherBoxEl.style.display = "none";
       refs.weatherContainerEl.style.height = "193px";
       refs.weatherContainerEl.style.background = "#102136";
+      refs.weather.style.paddingBottom = "32px";
       refs.weatherTitleEl?.classList.add("hidden");
       refs.swiperEl?.classList.add("hidden");
       refs.todayWeatherMoreContainer.style.height = "184px";
@@ -172,6 +173,7 @@ export async function weatherHandleSearch(): Promise<void> {
       refs.todayWeatherBoxEl.style.display = "none";
       refs.weatherContainerEl.style.height = "272px";
       refs.weatherContainerEl.style.background = "rgba(16, 33, 54, 0.8)";
+      refs.weather.style.paddingBottom = "32px";
       refs.weatherTitleEl?.classList.remove("hidden");
       refs.swiperEl?.classList.remove("hidden");
       refs.todayWeatherMoreContainer.style.height = "0";
@@ -227,6 +229,7 @@ function handleSwiperClick(e: Event, list: WeatherApiResponse) {
 
   if (savedAttribute === dateAttribute) {
     refs.weatherContainerEl.style.height = "272px";
+    refs.weather.style.paddingBottom = "32px";
     savedAttribute = "";
     return;
   }
@@ -236,6 +239,7 @@ function handleSwiperClick(e: Event, list: WeatherApiResponse) {
   );
 
   refs.weatherContainerEl.style.height = "541px";
+  refs.weather.style.paddingBottom = "64px";
   renderFiveDaysHoursWeather(dateList);
   refs.hoursBoxEl.scrollLeft = 0;
   savedAttribute = dateAttribute;

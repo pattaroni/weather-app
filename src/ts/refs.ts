@@ -1,4 +1,5 @@
 export const refs = {
+  weather: document.querySelector(".weather") as HTMLDivElement,
   weatherContainerEl: document.querySelector(
     ".weather-container"
   ) as HTMLDivElement,
