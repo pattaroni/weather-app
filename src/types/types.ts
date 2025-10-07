@@ -19,6 +19,8 @@ export interface WeatherType {
   dt_txt: string;
 }
 
+export interface WeatherHoursType {}
+
 export interface DayWeather {
   date: string;
   min: number;

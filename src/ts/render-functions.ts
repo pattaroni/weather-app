@@ -4,7 +4,11 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "../css/swiper-overrides.css";
 import spriteUrl from "../img/sprite.svg";
-import type { DayWeather, WeatherTodayApiResponse } from "../types/types";
+import type {
+  DayWeather,
+  WeatherTodayApiResponse,
+  WeatherType,
+} from "../types/types";
 import { refs } from "./refs";
 import {
   clock,
@@ -25,7 +29,7 @@ type WeatherIcon =
 
 export function renderWeatherSlider(data: DayWeather[]) {
   let iconHref: WeatherIcon = "icon-sun";
-  const markup = `
+  const markup: string = `
     <div class="swiper-wrapper">
     ${data
       .map((item) => {
@@ -64,7 +68,9 @@ export function renderWeatherSlider(data: DayWeather[]) {
                 <p class="value-temp">${Math.round(item.max)}°</p>
               </li>
             </ul>
-            <button type="button" class="more-info-btn">more info</button>
+            <button type="button" class="more-info-btn" data-date='${
+              item.date
+            }'>more info</button>
           </div>`;
       })
       .join("")}
@@ -112,7 +118,7 @@ export function renderTodayWeather(data: WeatherTodayApiResponse): void {
       iconHref = "icon-snow";
       break;
   }
-  const markup = `
+  const markup: string = `
     <div class='today-weather-icon-box'>
       <svg class="weather-icon-today" width="35" height="35">
         <use href="${spriteUrl}#${iconHref}"></use>
@@ -143,7 +149,7 @@ export function renderTodayWeather(data: WeatherTodayApiResponse): void {
 }
 
 export function renderTodayMoreWeather(data: WeatherTodayApiResponse) {
-  const currentDay = getDayOfMonth(data.dt, data.timezone);
+  const currentDay: number = getDayOfMonth(data.dt, data.timezone);
   let endDayString: string = "";
   switch (currentDay) {
     case 1:
@@ -158,7 +164,7 @@ export function renderTodayMoreWeather(data: WeatherTodayApiResponse) {
     default:
       endDayString = "th";
   }
-  const markup = `
+  const markup: string = `
     <div class='today-date-container'>
       <p class='today-date-day-p'>${currentDay}<sup class='today-th-sup'>${endDayString}</sup></p>
       <p class='today-date-week-day-p'>${getShortWeekdayName(
@@ -203,4 +209,58 @@ export function renderTodayMoreWeather(data: WeatherTodayApiResponse) {
   ) as HTMLParagraphElement;
 
   clock(clockEl, data.timezone);
+}
+
+export function renderFiveDaysHoursWeather(data: WeatherType[]) {
+  let iconHref: WeatherIcon = "icon-sun";
+  console.log(iconHref);
+  const markup: string = `
+    ${data
+      .map((item) => {
+        switch (item.weather[0].main) {
+          case "Clouds":
+            iconHref = "icon-cloud";
+            break;
+          case "Rain":
+            iconHref = "icon-rain";
+            break;
+          case "Clear":
+            iconHref = "icon-sun";
+            break;
+          case "Snow":
+            iconHref = "icon-snow";
+            break;
+        }
+        return `<div class="hours-card">
+          <p class='hours-text'>${item.dt_txt.split(" ")[1].slice(0, 5)}</p>
+          <svg class="weather-icon" width="35" height="35">
+            <use href="${spriteUrl}#${iconHref}"></use>
+          </svg>
+          <p class='hours-temp'>${Math.round(item.main.temp)}°</p>
+          <div class='details-container'>
+            <div class='details-box'>
+              <svg class="details-icon" width="20" height="20">
+                <use href="${spriteUrl}#icon-time"></use>
+              </svg>
+              <p class='details-value'>${item.main.pressure} mm</p>
+            </div>
+            <div class='details-box'>
+              <svg class="details-icon" width="20" height="20">
+                <use href="${spriteUrl}#icon-humidity"></use>
+              </svg>
+              <p class='details-value'>${item.main.humidity}%</p>
+            </div>
+            <div class='details-box'>
+              <svg class="details-icon" width="20" height="20">
+                <use href="${spriteUrl}#icon-windy"></use>
+              </svg>
+              <p class='details-value'>${item.wind.speed.toFixed(1)} m/s</p>
+            </div>
+          </div>
+
+        </div>`;
+      })
+      .join("")}`;
+  refs.hoursBoxEl.innerHTML = "";
+  refs.hoursBoxEl.insertAdjacentHTML("beforeend", markup);
 }

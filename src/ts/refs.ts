@@ -27,4 +27,5 @@ export const refs = {
   todayCitationContainerEl: document.querySelector(
     ".today-citation"
   ) as HTMLDivElement,
+  hoursBoxEl: document.querySelector(".hours-box") as HTMLDivElement,
 };

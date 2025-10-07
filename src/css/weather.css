@@ -126,6 +126,7 @@
 
 .section-weather .container {
   padding-bottom: 32px;
+  position: relative;
 }
 
 .weather-container {
@@ -139,7 +140,7 @@
   padding-bottom: 32px;
   transition: all 250ms ease-in-out;
   overflow: hidden;
-  margin-bottom: 32px;
+  margin-bottom: 92px;
   transition: all 250ms ease-in-out;
 }
 
@@ -399,10 +400,96 @@
   letter-spacing: 0.04em;
 }
 
-/* animation */
-.days-btn-box.top {
-  transform: translateY(-304px);
+.hours-box {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 20px;
 }
-.weather-container.bottom {
+
+/* Кастомізація scrollbar */
+.hours-box::-webkit-scrollbar {
+  height: 2px;
+}
+
+.hours-box::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hours-box::-webkit-scrollbar-thumb {
+  background: #ff6b09;
+}
+
+.hours-box::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.five-days-hours-container {
+  padding: 10px 5px 0 5px;
+}
+
+.hours-card {
+  flex: 0 0 120px;
+  height: 217px;
+  background: transparent;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.hours-text {
+  opacity: 0.54;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.hours-card .weather-icon {
+  margin-bottom: 8px;
+}
+
+.hours-temp {
+  font-weight: 700;
+  font-size: 18px;
+  text-align: center;
+  color: #ff6b09;
+  margin-bottom: 8px;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.details-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  fill: #fff;
+  opacity: 0.54;
+}
+
+/* animation */
+.days-btn-box {
+  position: absolute;
+  top: 225px;
+}
+
+.top {
+  top: 0;
+}
+
+.bottom {
   transform: translateY(59px);
+  margin-bottom: 32px;
 }

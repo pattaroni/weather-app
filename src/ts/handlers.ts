@@ -1,10 +1,16 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
-import type { DayWeather, WeatherTodayApiResponse } from "../types/types";
+import type {
+  DayWeather,
+  WeatherApiResponse,
+  WeatherTodayApiResponse,
+  WeatherType,
+} from "../types/types";
 import { fetchTodayWeather, fetchWeather } from "./api";
 import { groupByDay } from "./helpers";
 import { refs } from "./refs";
 import {
+  renderFiveDaysHoursWeather,
   renderTodayMoreWeather,
   renderTodayWeather,
   renderWeatherSlider,
@@ -15,88 +21,91 @@ let QUERY: string = "";
 
 let todayCache: WeatherTodayApiResponse | null = null;
 let fiveDaysCache: DayWeather[] | null = null;
+let fiveDaysResponseCache: WeatherApiResponse | null = null;
+let savedAttribute: string = "";
+let swiperClickHandler: ((e: Event) => void) | null = null;
 
 export async function weatherHandleSearch(): Promise<void> {
   const form = refs.formEl as HTMLFormElement;
   const input = form?.elements.namedItem("searchInput") as HTMLInputElement;
   if (!form) return;
 
-  refs.formEl?.addEventListener("submit", async (e) => {
+  // SEARCH FUNCTION
+  async function handleSearch(city: string): Promise<void> {
+    todayCache = null;
+    fiveDaysCache = null;
+
+    try {
+      if (refs.todayBtnEl.classList.contains("active")) {
+        // TODAY WEATHER
+        refs.swiperEl.innerHTML = "";
+        const list = await fetchTodayWeather(city);
+        renderTodayWeather(list);
+        renderTodayMoreWeather(list);
+        QUERY = city;
+        todayCache = list;
+      } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
+        // FIVE DAYS WEATHER
+        refs.todayWeatherBoxEl.innerHTML = "";
+        const list = await fetchWeather(city);
+        const groupList: DayWeather[] = groupByDay(list.list);
+
+        if (refs.weatherTitleEl) {
+          refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
+        }
+
+        renderWeatherSlider(groupList);
+        QUERY = city;
+        fiveDaysCache = groupList;
+        fiveDaysResponseCache = list;
+
+        if (swiperClickHandler) {
+          refs.swiperEl.removeEventListener("click", swiperClickHandler);
+        }
+        swiperClickHandler = (e: Event) => handleSwiperClick(e, list);
+        refs.swiperEl.addEventListener("click", swiperClickHandler);
+
+        savedAttribute = "";
+        refs.weatherContainerEl.style.height = "272px";
+      }
+    } catch (error) {
+      iziToast.error({
+        message: "City not found. Please try again.",
+        position: "bottomCenter",
+      });
+    }
+  }
+
+  // FORM SUBMIT
+  refs.formEl?.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (input.value.trim() === "") {
+    const city = input.value.trim();
+    if (city === "") {
       iziToast.info({
         message: "Please enter a city name.",
         position: "bottomCenter",
       });
       return;
     }
-    todayCache = null;
-    fiveDaysCache = null;
-    try {
-      const city = input.value.trim();
-      if (refs.todayBtnEl.classList.contains("active")) {
-        refs.swiperEl.innerHTML = "";
-        const list = await fetchTodayWeather(city);
-        renderTodayWeather(list);
-        renderTodayMoreWeather(list);
-        QUERY = city;
-        todayCache = list;
-      } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
-        refs.todayWeatherBoxEl.innerHTML = "";
-        const list = await fetchWeather(city);
-        const groupList: DayWeather[] = groupByDay(list.list);
-        if (refs.weatherTitleEl)
-          refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
-        renderWeatherSlider(groupList);
-        QUERY = city;
-        fiveDaysCache = groupList;
-      }
-      input.value = "";
-    } catch (error) {
-      input.value = "";
-      iziToast.error({
-        message: "City not found. Please try again.",
-        position: "bottomCenter",
-      });
-    }
+    handleSearch(city);
+    input.value = "";
   });
 
-  refs.locationIconEl?.addEventListener("click", async () => {
-    if (input.value.trim() === "") {
-      iziToast.info({ message: "Please enter a city name." });
+  // LOCATION ICON SUBMIT
+  refs.locationIconEl?.addEventListener("click", () => {
+    const city = input.value.trim();
+    if (city === "") {
+      iziToast.info({
+        message: "Please enter a city name.",
+        position: "bottomCenter",
+      });
       return;
     }
-    todayCache = null;
-    fiveDaysCache = null;
-    try {
-      const city = input.value.trim();
-      if (refs.todayBtnEl.classList.contains("active")) {
-        refs.swiperEl.innerHTML = "";
-        const list = await fetchTodayWeather(city);
-        renderTodayWeather(list);
-        renderTodayMoreWeather(list);
-        QUERY = city;
-        todayCache = list;
-      } else if (refs.fiveDaysBtnEl.classList.contains("active")) {
-        refs.todayWeatherBoxEl.innerHTML = "";
-        const list = await fetchWeather(city);
-        const groupList: DayWeather[] = groupByDay(list.list);
-        if (refs.weatherTitleEl)
-          refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
-        renderWeatherSlider(groupList);
-        QUERY = city;
-        fiveDaysCache = groupList;
-      }
-      input.value = "";
-    } catch (error) {
-      input.value = "";
-      iziToast.error({
-        message: "City not found. Please try again.",
-        position: "bottomCenter",
-      });
-    }
+    handleSearch(city);
+    input.value = "";
   });
 
+  // DEFAULT TODAY RENDER
   try {
     const defaultList = await fetchTodayWeather(DEFAULT_CITY);
     renderTodayWeather(defaultList);
@@ -110,12 +119,19 @@ export async function weatherHandleSearch(): Promise<void> {
     });
   }
 
+  // TODAY / 5 DAYS
   refs.daysBtnBoxEl?.addEventListener("click", async (e) => {
     const target = e.target as HTMLElement;
     if (target === e.currentTarget) return;
 
     // TODAY BUTTON
     if (target.nodeName === "BUTTON" && target.id === "today-btn") {
+      if (swiperClickHandler) {
+        refs.swiperEl.removeEventListener("click", swiperClickHandler);
+        swiperClickHandler = null;
+      }
+      savedAttribute = "";
+
       refs.todayBtnEl.classList.add("active");
       refs.fiveDaysBtnEl.classList.remove("active");
       refs.todayWeatherBoxEl.style.display = "block";
@@ -164,17 +180,35 @@ export async function weatherHandleSearch(): Promise<void> {
       refs.daysBtnBoxEl.classList.add("top");
       refs.weatherContainerEl.classList.add("bottom");
 
+      savedAttribute = "";
+      const city = QUERY || DEFAULT_CITY;
+
       if (fiveDaysCache) {
         renderWeatherSlider(fiveDaysCache);
+        if (swiperClickHandler) {
+          refs.swiperEl.removeEventListener("click", swiperClickHandler);
+        }
+        if (fiveDaysResponseCache) {
+          swiperClickHandler = (e: Event) =>
+            handleSwiperClick(e, fiveDaysResponseCache!);
+          refs.swiperEl.addEventListener("click", swiperClickHandler);
+        }
       } else {
         try {
-          const city = QUERY || DEFAULT_CITY;
           const list = await fetchWeather(city);
           const groupList: DayWeather[] = groupByDay(list.list);
-          if (refs.weatherTitleEl)
+          if (refs.weatherTitleEl) {
             refs.weatherTitleEl.innerHTML = `${list.city.name}, ${list.city.country}`;
+          }
+
           renderWeatherSlider(groupList);
           fiveDaysCache = groupList;
+          fiveDaysResponseCache = list;
+          if (swiperClickHandler) {
+            refs.swiperEl.removeEventListener("click", swiperClickHandler);
+          }
+          swiperClickHandler = (e: Event) => handleSwiperClick(e, list);
+          refs.swiperEl.addEventListener("click", swiperClickHandler);
         } catch (error) {
           iziToast.error({
             message: "Error loading weather data",
@@ -184,4 +218,25 @@ export async function weatherHandleSearch(): Promise<void> {
       }
     }
   });
+}
+
+function handleSwiperClick(e: Event, list: WeatherApiResponse) {
+  const target = e.target as HTMLElement;
+  const dateAttribute = target.getAttribute("data-date");
+  if (target.nodeName !== "BUTTON" || !dateAttribute) return;
+
+  if (savedAttribute === dateAttribute) {
+    refs.weatherContainerEl.style.height = "272px";
+    savedAttribute = "";
+    return;
+  }
+
+  const dateList: WeatherType[] = list.list.filter((item) =>
+    item.dt_txt.startsWith(dateAttribute)
+  );
+
+  refs.weatherContainerEl.style.height = "541px";
+  renderFiveDaysHoursWeather(dateList);
+  refs.hoursBoxEl.scrollLeft = 0;
+  savedAttribute = dateAttribute;
 }
