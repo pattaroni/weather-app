@@ -1,12 +1,14 @@
 body {
   background-image: url(../img/background/mobile/mob-background@1x.webp);
   background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background-size: contain;
+  /* background-position: bottom top; */
   background-color: #000;
   color: #fff;
   height: 100vh;
+  min-width: 320px;
   font-family: "Lato", sans-serif;
+  background-size: 100%;
 }
 @media screen and (min-resolution: 192dpi) {
   body {

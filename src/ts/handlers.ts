@@ -88,7 +88,7 @@ export async function weatherHandleSearch(): Promise<void> {
       return;
     }
     handleSearch(city);
-    input.value = "";
+    // input.value = "";
   });
 
   // LOCATION ICON SUBMIT
@@ -102,7 +102,7 @@ export async function weatherHandleSearch(): Promise<void> {
       return;
     }
     handleSearch(city);
-    input.value = "";
+    // input.value = "";
   });
 
   // DEFAULT TODAY RENDER
